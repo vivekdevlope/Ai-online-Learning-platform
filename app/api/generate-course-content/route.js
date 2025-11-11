@@ -8,16 +8,22 @@ import { eq } from "drizzle-orm";
 import { db } from 'config/db';
 
 
-const PROMPT = `
-Depends on Chapter name and Topic Generate content for each topic in HTML and give response in JSON format.
-Schema:{
-chapterName:<>,
+const PROMPT = `Based on the provided Chapter name and its Topics, generate detailed content for each topic in HTML format.
+The final output must be a single, valid JSON object only, without any surrounding text or markdown like \`\`\`json.
+Follow this exact JSON schema:
 {
-topic:<>,
-content:<>
+    "chapterName": "<The name of the chapter>",
+    "topics": [
+        {
+            "topic": "<The name of the topic>",
+            "content": "<The generated HTML content for this topic, including h3 tags>"
+        }
+    ]
 }
-}
-:User Input:
+
+IMPORTANT: Inside the "content" HTML, you MUST use single quotes for all attributes (e.g., <div class='my-class'>) to avoid breaking the JSON structure. Do NOT use double quotes inside the HTML.
+
+User Input:
 `;
 
 export async function POST(req) {
